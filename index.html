@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F L Y</title>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        body {
+            background-color: rgb(255, 255, 255);
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        #hi {
+            font-size: 30px;
+            color: #ffffff;
+        }
+
+        #autoplay-popup {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #autoplay-popup-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+            #end-text {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            color: black;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 2000;
+        }
+    </style>
+</head>
+<body>
+    <div style="position: absolute; top: 10px; left: 10px; z-index: 1001;">
+        <a href="#" id="cemj.shop"><img src="wordart.png" alt="" width="120px" height="80px"></a>
+        <div id="cemj-menu" style="display: none; text-align: left; margin-top: 5px;">
+            <a href="shop.html" style="text-decoration: none; color: black; font-size: 16px; display: block; margin-bottom: 5px;">Shop</a>
+            <a href="listen.html" style="text-decoration: none; color: black; font-size: 16px; display: block; margin-bottom: 5px;">Listen</a>
+            <a href="about.html" style="text-decoration: none; color: black; font-size: 16px; display: block;">About</a>
+        </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh;">
+        <a href="#" onclick="playContent(event)"><img id="yandhi-gif" src="yandhi-kanyewest.gif" data-animated-src="yandhi-kanyewest.gif" alt="Kanye West Yandhi album art"></a>
+        <p id="hi">B L R D</p>
+    </div>
+
+    <div id="autoplay-popup">
+        <div id="autoplay-popup-content">
+            <p>THIS SITE USES AUTOPLAY.</p>
+            <p>CLICK OK TO ACCEPT</p>
+            <button id="accept-autoplay">OK</button>
+        </div>
+    </div>
+
+    <div id="end-text">
+        <p>The music has ended.</p>
+    </div>
+
+    <audio id="myAudio" src="cemj.shop.mp3" preload="auto"></audio>
+    <audio id="newAudio" src="uwu.mp3"></audio>
+    <audio id="u" src="alleyezuponm3.m4a"></audio>
+
+    <script>        
+        const bgmAudio = document.getElementById('u');
+        bgmAudio.volume = 0.1; // Set BGM volume to 10%
+        const kanye = document.getElementById('newAudio');
+
+        // --- Cookie Functions ---
+        function setCookie(name, value, days) {
+            let expires = "";
+            if (days) {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        }
+
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        // --- Autoplay Logic ---
+        window.addEventListener('load', () => {
+            if (getCookie("autoplayAccepted") === "true") {
+                bgmAudio.play().catch(error => console.log("Autoplay prevented by browser:", error));
+            } else {
+                document.getElementById('autoplay-popup').style.display = 'flex';
+            }
+        });
+
+        document.getElementById('accept-autoplay').addEventListener('click', () => {
+            setCookie("autoplayAccepted", "true", 365); // Set cookie for 1 year
+            bgmAudio.play().catch(error => console.log("Audio play failed on user interaction:", error));
+            document.getElementById('autoplay-popup').style.display = 'none';
+        });
+
+        document.getElementById('cemj.shop').addEventListener('click', (event) => {
+            event.preventDefault();
+            const menu = document.getElementById('cemj-menu');
+            if (menu.style.display === 'none' || menu.style.display === '') {
+                menu.style.display = 'block';
+            } else {
+                menu.style.display = 'none';
+            }
+        });
+
+        // --- GIF and Click Audio Logic ---
+        let hasPlayed = false;
+        function playContent(event) {
+            event.preventDefault(); // Prevents page from jumping to the top on click
+            document.getElementById("myAudio").play();
+            
+            // This logic now correctly uses the global flag.
+            // It will only mute the background music on the first click.
+            if (!hasPlayed) {
+                bgmAudio.volume = 0;
+                hasPlayed = true; // Set the flag so this block doesn't run again.
+            }
+        }
+
+        // --- BGM End Logic ---
+        bgmAudio.addEventListener('ended', () => {
+            document.getElementById('end-text').style.display = 'block';
+            kanye.volume = 0.7;
+            kanye.play();
+        });
+
+        const secretSequence = ['a', 'e', 'i', 'o', 'u'];
+        let keyIndex = 0;
+
+        document.addEventListener('keydown', function(e) {
+            const key = e.key.toLowerCase();
+            if (key === secretSequence[keyIndex]) {
+                keyIndex++;
+            } else {
+                keyIndex = 0; // Reset if the sequence is broken
+            }
+
+            if (keyIndex === secretSequence.length) {
+                showAdminPanel();
+                keyIndex = 0; // Reset for next time
+            }
+        });
+
+        function showAdminPanel() {
+            // Remove existing content
+            document.body.innerHTML = '';
+
+            // Create admin panel container
+            const adminPanel = document.createElement('div');
+            adminPanel.id = 'admin-panel';
+            adminPanel.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.9);
+                color: white;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                z-index: 9999;
+                font-family: Arial, sans-serif;
+            `;
+
+            const title = document.createElement('h2');
+            title.textContent = 'Admin Panel - Audio Controls';
+            adminPanel.appendChild(title);
+            const audio222 = document.createElement('audio');
+            audio222.src = 'uwu.mp3';
+
+            const audioControls = document.createElement('div');
+            audioControls.style.cssText = `
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+                margin-top: 20px;
+            `;
+
+            // Get all audio elements on the page
+            const allAudios = document.querySelectorAll('audio');
+
+            allAudios.forEach(audio => {
+                const audioId = audio.id || 'Unnamed Audio';
+                const audioSrc = audio.src.split('/').pop(); // Get just the filename
+
+                const controlGroup = document.createElement('div');
+                controlGroup.style.cssText = `
+                    display: flex;
+                    flex-direction: column;
+                    gap: 5px;
+                    padding: 10px;
+                    border: 1px solid rgba(255, 255, 255, 0.3);
+                    border-radius: 5px;
+                `;
+
+                const audioLabel = document.createElement('span');
+                audioLabel.textContent = `${audioId} (${audioSrc})`;
+                controlGroup.appendChild(audioLabel);
+
+                const playPauseBtn = document.createElement('button');
+                playPauseBtn.textContent = 'Play/Pause';
+                playPauseBtn.onclick = () => {
+                    if (audio.paused) {
+                        audio.play();
+                    } else {
+                        audio.pause();
+                    }
+                };
+                controlGroup.appendChild(playPauseBtn);
+
+                const volumeControl = document.createElement('input');
+                volumeControl.type = 'range';
+                volumeControl.min = '0';
+                volumeControl.max = '1';
+                volumeControl.step = '0.01';
+                volumeControl.value = audio.volume;
+                volumeControl.oninput = (e) => {
+                    audio.volume = e.target.value;
+                };
+                controlGroup.appendChild(volumeControl);
+
+                audioControls.appendChild(controlGroup);
+            }); // Closing the forEach loop
+
+            adminPanel.appendChild(audioControls);
+
+            document.body.appendChild(adminPanel);
+        }
+    </script>
+</body>
+</html>
+<script>
+
+            const allAudios = document.querySelectorAll('audio');
+
+            allAudios.forEach(audio => {
+                const audioId = audio.id || 'Unnamed Audio';
+                const audioSrc = audio.src.split('/').pop(); // Get just the filename
+
+                const controlGroup = document.createElement('div');
+                controlGroup.style.cssText = `
+                    display: flex;
+                    flex-direction: column;
+                    gap: 5px;
+                `;
+            });
+
+    </script>
+</body>
+</html>
